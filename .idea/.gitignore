@@ -6,3 +6,9 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+# Certificats locaux pour ne pas pousser de clés privées
+infra/certs/
+*.key
+*.pfx
+*.pem
