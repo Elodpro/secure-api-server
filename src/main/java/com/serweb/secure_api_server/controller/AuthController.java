@@ -22,6 +22,6 @@ public class AuthController {
     @PostMapping("/auth/login") // C'est un POST, pas un GET
     public Map<String, String> login() {
         // C'est ici qu'on va générer le JWT
-        return Map.of("message", "Login Successful. JWT en attente");
+        return Map.of("message", "Login Successful. JWT en attente !");
     }
 }
