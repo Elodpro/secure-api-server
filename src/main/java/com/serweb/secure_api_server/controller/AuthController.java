@@ -24,7 +24,7 @@ public class AuthController {
     public Map<String, String> login(@RequestBody LoginRequest loginRequest) {
         // C'est ici qu'on va générer le JWT
         return Map.of(
-                "message", "Login Successful. JWT en attente !",
+                "message", "Login Successful. JWT en attente !!",
                 "username_recu", loginRequest.getUsername(),
                 "password_recu", loginRequest.getPassword()
         );
