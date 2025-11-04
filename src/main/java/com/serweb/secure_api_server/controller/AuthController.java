@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 public class AuthController {
-
+/**/
     /**
      * Point de terminaison pour l'authentification (login).
      * Le client enverra ses identifiants (login/mdp) ici.
