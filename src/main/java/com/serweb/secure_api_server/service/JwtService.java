@@ -1,19 +1,14 @@
 package com.serweb.secure_api_server.service;
 
 import org.springframework.security.oauth2.jwt.JwtEncoder;
-
-import com.serweb.secure_api_server.dto.LoginRequest;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
+@Service
 public class JwtService {
     // Déclaration qu'on ait besoin de cet outil
     private JwtEncoder jwtEncoder;
@@ -23,9 +18,16 @@ public class JwtService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public Map<String, String> generateToken(Authentication authentication) {
+    public String generateToken(Authentication authentication) {
 
+        Instant now = Instant.now(); // Récupère l'heure actuelle
+        Instant expiresAt = now.plus(1, ChronoUnit.HOURS); // Prends l'heure actuelle de la variable "now" et rajoute 1h avec la méthode "plus()" ce qui donne l'expiration
 
+        String scope = authentication.getAuthorities().stream()
+                .map(a -> a.getAuthority())
+                .collect(Collectors.joining("")); // de la collection d'objets GrantedAuthority à une simple chaîne de rôles séparés par des espaces (scope)
+
+        return "Expire dans : " + expiresAt + scope; // Retournera un String vide
 
     }
 
