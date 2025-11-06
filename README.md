@@ -26,8 +26,6 @@ Intégration derrière un Reverse Proxy standard pour la terminaison TLS et l'ap
 
 
 
-
-
 # Durcissement & Observabilité  :
 
 Application des En-têtes de sécurité HTTP essentiels au niveau du frontal.
@@ -45,5 +43,25 @@ Les tests unitaires sur la logique d'authentification/autorisation.
 
 Les scénarios de sécurité (jeton absent, jeton expiré, rôle insuffisant).
 
-
+# secure by design
 La vérification des critères d'acceptation non fonctionnels (HTTPS obligatoire, en-têtes de sécurité actifs).
+
+Ports :
+
+Nginx : 443
+
+Spring Boot : 8080
+
+Schéma :
+
+Client → Nginx (HTTPS, headers, rate limit, CORS) → Spring Boot (API secure).
+
+Lister les types d’endpoints :
+
+/public/** : libre
+
+/auth/** : login / refresh
+
+/api/** : protégé JWT + rôles
+
+/actuator/** : restreint (admin / internal)
