@@ -1,4 +1,4 @@
-package com.serweb.secure_api_server.controller;
+package com.serweb.secure_api_server.dto;
 
 public class LoginRequest {
     private String username;
