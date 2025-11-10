@@ -11,10 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-
-
 import javax.security.auth.Subject;
-
 
 @Service
 public class JwtService {
