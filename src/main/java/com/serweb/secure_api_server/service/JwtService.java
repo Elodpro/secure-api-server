@@ -37,9 +37,9 @@ public class JwtService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(authentication.getName()) // Extrait le nom d'utilisateur (Subject)
                 .issuer("secure-api-server") // Définit l'émetteur (Issuer)
-                .expiresAt(expiresAt)
-                .claim("Scope", scope)
-                .build();
+                .expiresAt(expiresAt) // Lorsque le jeton expirera
+                .claim("Scope", scope) // Prend les règles définit au dessus
+                .build(); // Construit avec tout les éléments ci-dessus
 
         // Variable contenant le contenu du jeton qui est dans "claims" prêt à être signé cryptographiquement.
         // On utilise la méthode .from() pour dire d'où viens les paramètres du jeton
