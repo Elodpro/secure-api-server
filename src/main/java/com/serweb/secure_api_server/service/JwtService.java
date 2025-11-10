@@ -48,7 +48,7 @@ public class JwtService {
         // On utilise la méthode .from() pour dire d'où viens les paramètres du jeton
         JwtEncoderParameters parameters = JwtEncoderParameters.from(claims);
 
-        // Emission du JWT signé
+        // Emission du JWT signé pour l'utiliser dans la classe "login" pour le "return"
         return this.jwtEncoder.encode(parameters).getTokenValue();
 
     }
