@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Front de test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body{font-family:system-ui,Segoe UI,Roboto,Arial;max-width:720px;margin:40px auto;padding:0 16px}
+        code{background:#f2f2f2;padding:2px 6px;border-radius:6px}
+        .card{border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:16px}
+        button{padding:10px 14px;border-radius:10px;border:1px solid #ddd;cursor:pointer}
+    </style>
+</head>
+<body>
+<h1>Front de test</h1>
+<p>Ce front est servi par Nginx sur <code>/</code>. L’API est reverse-proxy sur <code>/api</code>.</p>
+
+<div class="card">
+    <h2>Ping API</h2>
+    <p>
+        <button id="btn">Tester /api (GET)</button>
+    </p>
+    <pre id="out">Clique pour tenter un appel vers l’API…</pre>
+</div>
+
+<script>
+    document.getElementById('btn').onclick = async () => {
+        const out = document.getElementById('out');
+        out.textContent = 'Appel en cours...';
+        try {
+            // essaie /api/actuator/health, sinon /api (ajuste selon tes endpoints)
+            let res = await fetch('/api/actuator/health');
+            if (!res.ok) res = await fetch('/api');
+            const text = await res.text();
+            out.textContent = `Status: ${res.status}\n\n${text}`;
+        } catch (e) {
+            out.textContent = 'Erreur de requête: ' + e;
+        }
+    };
+</script>
+</body>
+</html>
