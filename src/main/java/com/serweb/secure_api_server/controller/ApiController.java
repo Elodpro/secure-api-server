@@ -6,16 +6,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api") // Pour l'url
 public class ApiController {
 
     @GetMapping("/public")
     public String publicEndpoint() {
-        return "✅ Public: accessible sans authentification";
+        return "Public: accessible sans authentification";
     }
 
     @GetMapping("/private")
     public String privateEndpoint(Authentication auth) {
-        return "🔒 Private: bonjour " + auth.getName() + " (role USER)";
+        return "Private: bonjour " + auth.getName() + " (role USER)";
     }
 }
