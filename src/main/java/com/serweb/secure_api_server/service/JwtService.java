@@ -1,6 +1,7 @@
 package com.serweb.secure_api_server.service;
 
 import jakarta.security.auth.message.callback.PrivateKeyCallback;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import javax.security.auth.Subject;
+
 
 @Service
 public class JwtService {
