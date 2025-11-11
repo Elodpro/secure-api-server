@@ -1,7 +1,9 @@
 package com.serweb.secure_api_server.controller;
 
 import com.serweb.secure_api_server.dto.LoginRequest;
+import com.serweb.secure_api_server.service.JwtService;
 
+import com.serweb.secure_api_server.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,13 +23,16 @@ public class AuthController {
      */
 
     // Déclare le "cerveau" "L'AuthenticationManager"
-    // ON met "final" pour qu'il soit obligatoire
+    // ON met "final" pour qu'il soit obligatoire dès le début
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
 
     // Injecte le "cerveau" via le constructeur
     // Spring va voir cela et va nous donner l'AuthenticationManager qu'on a défini dans SecurityConfig
-    public AuthController(AuthenticationManager authenticationManager) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/auth/login") // C'est un POST, pas un GET
@@ -45,14 +50,16 @@ public class AuthController {
                 )
         );
 
+        // Variable qui stock le nom de l'user
         String username = authentication.getName();
+        // Variable qui stock le résultat de l'appel au service
+        String token = jwtService.generateToken(authentication);
 
         // Si les informations de connexion sont bonne (user et mdp correcte), ça va renvoyer ce qu'il
         // y a ci-dessous.
         return Map.of(
-                "message", "Utilisateur '" + username + "' authentifié avec succès!",
-                "jwt_status", "Génération du JWT à venir.."
+                "Authentification", "Utilisateur '" + username + "' authentifié avec succès!",
+                "Token", token
         );
-
     }
 }
