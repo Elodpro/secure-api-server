@@ -37,7 +37,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                .oauth
+                .oauth2ResourceServer(oauth2 ->oauth2.jwt(Customizer.withDefaults()));
+
+        return http.build();
 
 
 
