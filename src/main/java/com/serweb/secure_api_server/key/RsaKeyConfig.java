@@ -2,9 +2,15 @@ package com.serweb.secure_api_server.key;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 import java.security.Key;
 import java.security.KeyPair;
@@ -48,6 +54,16 @@ public class RsaKeyConfig {
         new JWKSet(rsaKey); // NimbusJwtEncoder ne sait pas comment prendre le "Tampon secret" directement
 
         JWKSet contRsaKey = new JWKSet(rsaKey);
+        JWKSource<SecurityContext> contOffRsaKey = new ImmutableJWKSet(contRsaKey);
+
+        return new NimbusJwtEncoder(contOffRsaKey);
+
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(RSAKey rsaKey) throws Exception{ // Le "throws Exception" dis que ca peux quand meme echouer
+
+        return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
 
     }
 
