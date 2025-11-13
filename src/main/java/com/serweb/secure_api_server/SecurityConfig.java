@@ -25,6 +25,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder){ // Fabrique l'objet AuthenticationManager que le AuthController demande
+
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(); // Création du spécialiste
+
+        authProvider.setUserDetailsService(userDetailsService); // La configuration pour les deux paramètre de la méthode "authenticationManager"
+        authProvider.setPasswordEncoder(passwordEncoder);
+
+        return new ProviderManager(authProvider); // On renvoit le Manager final
+
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder, OAuth2ResourceServerProperties oAuth2ResourceServerProperties) throws Exception {
         http
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder)))

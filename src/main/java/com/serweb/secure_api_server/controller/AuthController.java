@@ -4,6 +4,7 @@ import com.serweb.secure_api_server.dto.LoginRequest;
 import com.serweb.secure_api_server.service.JwtService;
 
 import com.serweb.secure_api_server.service.JwtService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+
 
 @RestController
 public class AuthController {
