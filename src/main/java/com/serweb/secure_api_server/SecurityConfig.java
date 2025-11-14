@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -44,9 +46,7 @@ public class SecurityConfig {
                 .roles("ADMIN", "USER") // Rôles ADMIN et USER
                 .build();
 
-        InMemoryUserDetailsManager annuaire = new InMemoryUserDetailsManager(aliceUser, elodUser); // Crée un annuaire d'utilisateur
-
-        return new InMemoryUserDetailsManager(aliceUser, elodUser);
+        return new InMemoryUserDetailsManager(aliceUser, elodUser);// Crée un annuaire d'utilisateur et le renvoi
     }
 
     @Bean
@@ -62,9 +62,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder, OAuth2ResourceServerProperties oAuth2ResourceServerProperties) throws Exception {
+    public JwtAuthenticationConverter jwtAuthenticationConverter(){
+
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter(); // Le traducteur principal
+
+        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter(); // L'extracteur
+
+        authoritiesConverter.setAuthoritiesClaimName("scope"); // Le champ qui devra lire dans le jeton
+
+        authoritiesConverter.setAuthorityPrefix(""); // On lui dit de ne pas ajouter de prefix
+
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter); // On demande au traducteur d'utiliser l'extracteur
+
+        return converter;
+
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder, OAuth2ResourceServerProperties oAuth2ResourceServerProperties, JwtAuthenticationConverter converter) throws Exception {
         http
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder)))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder, jwtAuthenticationConverter(converter))))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -76,12 +93,8 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 ->oauth2.jwt(Customizer.withDefaults()));
-
+                );
         return http.build();
-
-
     }
 }
 
