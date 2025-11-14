@@ -31,16 +31,16 @@ public class JwtService {
         Instant expiresAt = now.plus(1, ChronoUnit.HOURS); // Prends l'heure actuelle de la variable "now" et rajoute 1h avec la méthode "plus()" ce qui donne l'expiration
 
         // De la collection d'objets GrantedAuthority à une simple chaîne de caractère de rôles séparés par des espaces (scope)
-        String scope = authentication.getAuthorities().stream()
+        String Scope = authentication.getAuthorities().stream()
                 .map(a -> a.getAuthority())
-                .collect(Collectors.joining(""));
+                .collect(Collectors.joining(" "));
 
         // Contient les paramètres du jeton
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(authentication.getName()) // Extrait le nom d'utilisateur (Subject)
                 .issuer("secure-api-server") // Définit l'émetteur (Issuer)
                 .expiresAt(expiresAt) // Lorsque le jeton expirera
-                .claim("Scope", scope) // Prend les règles définit au dessus
+                .claim("scope", Scope) // Prend les règles définit au dessus
                 .build(); // Construit avec tout les éléments ci-dessus
 
         // Variable contenant le contenu du jeton qui est dans "claims" prêt à être signé cryptographiquement.

@@ -3,6 +3,7 @@ package com.serweb.secure_api_server;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -75,13 +76,12 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter); // On demande au traducteur d'utiliser l'extracteur
 
         return converter;
-
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder, OAuth2ResourceServerProperties oAuth2ResourceServerProperties, JwtAuthenticationConverter converter) throws Exception {
-        http
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder, jwtAuthenticationConverter(converter))))
+        return http
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder).jwtAuthenticationConverter(converter)))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -92,9 +92,9 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated()
-                );
-        return http.build();
+                        .anyRequest().authenticated())
+                .build();
+
     }
 }
 
