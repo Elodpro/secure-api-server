@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -23,6 +25,29 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // Création de l'instance de l'outil de cryptage du mdp et le retourner.
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){ // Déclaration d'utilisateurs
+
+        UserDetails aliceUser = User.withUsername("Alice") // L'utilisateur Alice
+                .password(passwordEncoder.encode("Passw0rd")) // Hache ce mot de passe
+                .roles("USER") // Rôle USER
+                .build();
+
+        UserDetails elodUser = User.withUsername("Elod") // L'utilisateur Elod
+                .password(passwordEncoder.encode("Pa$$w0rd")) // Hache ce mot de passe
+                .roles("ADMIN", "USER") // Rôles ADMIN et USER
+                .build();
+
+        InMemoryUserDetailsManager annuaire = new InMemoryUserDetailsManager(aliceUser, elodUser); // Crée un annuaire d'utilisateur
+
+        return new InMemoryUserDetailsManager(aliceUser, elodUser);
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder){ // Fabrique l'objet AuthenticationManager que le AuthController demande
