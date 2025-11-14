@@ -94,7 +94,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .build();
-
     }
 }
 
