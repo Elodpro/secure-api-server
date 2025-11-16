@@ -92,7 +92,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
                 .build();
     }
 }

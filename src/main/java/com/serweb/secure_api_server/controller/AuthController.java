@@ -4,6 +4,7 @@ import com.serweb.secure_api_server.dto.LoginRequest;
 import com.serweb.secure_api_server.service.JwtService;
 
 import com.serweb.secure_api_server.service.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,7 +42,7 @@ public class AuthController {
     // Le @RequestBody dit à Spring de prendre le JSON du corps de la requête
     // LoginRequest loginRequest dit à Spring de convertir ce JSON en un objet "LoginRequest" et qu'il
     // l'appelle "loginRequest"
-    public Map<String, String> login(@RequestBody LoginRequest loginRequest) {
+    public Map<String, String> login(@RequestBody @Valid LoginRequest loginRequest) {
         // On va utiliser le "cerveau" pour l'authentifier
         // Ceci comprend le mot de passe de Postman, le Hacher avec BCrypt
         // et le comparer à celui qu'on a défini pour "alice" dans SecurityConfig

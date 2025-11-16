@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController// Dit à Spring que cette classe gère les requêtes HTTP (API)
-@RequestMapping("api/me") // Pour l'url api/me
+@RequestMapping("/api") // Pour l'url api/me ou api/admin/data ou autre
 public class UserController {
 
-    @GetMapping // Pour indiquer à Spring que cette méthode doit être exécutée quand un client envoie une requête GET vers l'URL /api/me
-    public Map<String, String> getMe(Authentication authentication, UserDetails authenticatedPrincipal){
+    @GetMapping("/me") // Pour indiquer à Spring que cette méthode doit être exécutée quand un client envoie une requête GET vers l'URL /api/me
+    public Map<String, String> getMe(Authentication authentication){
 
         String username = authentication.getName();
         String roles = authentication.getAuthorities().toString(); // Prend le(s) rôle(s) et le converti en chaîne de caractère
@@ -28,7 +28,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("api/admin/data") // Pour indiquer à Spring que cette méthode doit être exécutée quand un client envoie une requête GET vers l'URL /api/me
+    @GetMapping("/admin/data") // Pour indiquer à Spring que cette méthode doit être exécutée quand un client envoie une requête GET vers l'URL /api/me
     @PreAuthorize("hasRole('ADMIN')") // Authorise seulement un rôle spécifique
     public Map<String, String> getAdminData(Authentication authentication){
 
